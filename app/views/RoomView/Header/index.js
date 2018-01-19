@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Platform, TouchableOpacity, WebView, Dimensions } from 'react-native';
+import { Text, View, Platform, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -140,15 +140,14 @@ export default class extends React.PureComponent {
 	);
 
 	render() {
-		const { width, height } = Dimensions.get('window');
 		return (
-			[
-				<View style={styles.header}>
-					{this.renderLeft()}
-					{this.renderTitle()}
-					{this.renderRight()}
-				</View>
-			]
+
+			<View style={styles.header}>
+				{this.renderLeft()}
+				{this.renderTitle()}
+				{this.renderRight()}
+			</View>
+
 		);
 	}
 }
