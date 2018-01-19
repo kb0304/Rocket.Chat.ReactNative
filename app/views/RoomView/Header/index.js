@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { HeaderBackButton } from 'react-navigation';
 import Modal from 'react-native-modal';
-
+import openLink from '../../../utils/openLink';
 import realm from '../../../lib/realm';
 import Avatar from '../../../containers/Avatar';
 import { STATUS_COLORS } from '../../../constants/colors';
@@ -70,7 +70,7 @@ export default class extends React.PureComponent {
 	joinMconf = async() => {
 		try {
 			const result = await fetch('https://live11-kms.dev.mconf.com/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&meetingID=random-6822671&moderatorPW=mp&name=random-6822671&record=false&voiceBridge=77886&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=a0951414c745cc2e8ace938e17cd02875e5db514');
-			this.toggleModal();
+			openLink('https://live11-kms.dev.mconf.com/bigbluebutton/api/join?clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&fullName=Guilherme+Gazzo&meetingID=random-6822671&password=mp&redirect=true&checksum=5986a19a7b57fce246080aa01720061bbdd85c09');
 		} catch (e) {
 			alert(e);
 		}
@@ -147,21 +147,7 @@ export default class extends React.PureComponent {
 					{this.renderLeft()}
 					{this.renderTitle()}
 					{this.renderRight()}
-				</View>,
-				<Modal
-					isVisible={this.state.isModalVisible}
-					supportedOrientations={['portrait', 'landscape']}
-					style={{ alignItems: 'center', position: 'relative' }}
-					onBackdropPress={() => this.toggleModal()}
-				>
-					<WebView
-						mediaPlaybackRequiresUserAction
-						source={{ uri: 'https://live11-kms.dev.mconf.com/bigbluebutton/api/join?clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&fullName=Guilherme+Gazzo&meetingID=random-6822671&password=mp&redirect=true&checksum=5986a19a7b57fce246080aa01720061bbdd85c09' }}
-						style={{
-							width, height, top: 0, left: 0, margin: 5
-						}}
-					/>
-				</Modal>
+				</View>
 			]
 		);
 	}

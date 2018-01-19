@@ -1,4 +1,5 @@
-package com.rocketchatrn;
+package chat.rocket.reactnative;
+
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
@@ -29,5 +30,6 @@ public class RocketChatNativePackage implements ReactPackage {
         modules.add(new CustomTabsAndroid(reactContext));
         return modules;
     }
+
 
 }

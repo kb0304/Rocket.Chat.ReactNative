@@ -42,7 +42,9 @@ public class MainApplication extends Application implements ReactApplication {
               new ReactNativePushNotificationPackage(),
               new ReactVideoPackage(),
               new SplashScreenReactPackage(),
-              new RCTToastPackage()
+              new RCTToastPackage(),
+              new RocketChatNativePackage()
+
       );
     }
   };
