@@ -10,6 +10,7 @@ import Avatar from '../../../containers/Avatar';
 import { STATUS_COLORS } from '../../../constants/colors';
 import styles from './styles';
 import { closeRoom } from '../../../actions/room';
+import RocketChat from '../../../lib/rocketchat';
 
 @connect(state => ({
 	user: state.login.user,
@@ -68,8 +69,8 @@ export default class extends React.PureComponent {
 
 	joinMconf = async() => {
 		try {
-			await fetch('https://live11-kms.dev.mconf.com/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&meetingID=random-6822671&moderatorPW=mp&name=random-6822671&record=false&voiceBridge=77886&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=a0951414c745cc2e8ace938e17cd02875e5db514');
-			openLink('https://live11-kms.dev.mconf.com/bigbluebutton/api/join?clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&fullName=Guilherme+Gazzo&meetingID=random-6822671&password=mp&redirect=true&checksum=5986a19a7b57fce246080aa01720061bbdd85c09');
+			const result = await RocketChat.videobridgeJoin(this.rid);
+			openLink(result.url);
 		} catch (e) {
 			alert(e);
 		}

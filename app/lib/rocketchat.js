@@ -584,6 +584,9 @@ const RocketChat = {
 	},
 	setUserPresenceDefaultStatus(status) {
 		return call('UserPresence:setDefaultStatus', status);
+	},
+	videobridgeJoin(rid) {
+		return call('videobridge:join', { rid });
 	}
 };
 
