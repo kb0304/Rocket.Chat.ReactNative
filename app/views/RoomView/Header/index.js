@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Platform, TouchableOpacity, WebView } from 'react-native';
+import { Text, View, Platform, TouchableOpacity, WebView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -68,9 +68,12 @@ export default class extends React.PureComponent {
 	}
 
 	joinMconf = async() => {
-		const result = await fetch('https://live11-kms.dev.mconf.com/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=random-1014327&moderatorPW=mp&name=random-1014327&record=false&voiceBridge=74831&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=f9dd2290ebec40ff40c66efcccb43e282814e17f')
-		// const join = await fetch('https://live11-kms.dev.mconf.com/bigbluebutton/api/join?fullName=User+889230&meetingID=random-1014327&password=mp&redirect=true&checksum=7aafe8f21961b85fe296923a855ad0223cf7ac2f');
-		this.toggleModal();
+		try {
+			const result = await fetch('https://live11-kms.dev.mconf.com/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&meetingID=random-6822671&moderatorPW=mp&name=random-6822671&record=false&voiceBridge=77886&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=a0951414c745cc2e8ace938e17cd02875e5db514');
+			this.toggleModal();
+		} catch (e) {
+			alert(e);
+		}
 	}
 
 	renderLeft = () => (<HeaderBackButton
@@ -137,6 +140,7 @@ export default class extends React.PureComponent {
 	);
 
 	render() {
+		const { width, height } = Dimensions.get('window');
 		return (
 			[
 				<View style={styles.header}>
@@ -147,12 +151,14 @@ export default class extends React.PureComponent {
 				<Modal
 					isVisible={this.state.isModalVisible}
 					supportedOrientations={['portrait', 'landscape']}
-					style={{ alignItems: 'center' }}
+					style={{ alignItems: 'center', position: 'relative' }}
 					onBackdropPress={() => this.hideModal()}
 				>
 					<WebView
-						source={{ uri: 'https://live11-kms.dev.mconf.com/bigbluebutton/api/join?clientURL=https://live11-kms.dev.mconf.com/html5client/join&fullName=Guilherme+Gazzo&meetingID=random-6822671&password=ap&redirect=true&checksum=f7d0be999fb9be7b2a7352d12904334ca82c849d' }}
-						style={{ width: '100%', height: '100%' }}
+						source={{ uri: 'https://live11-kms.dev.mconf.com/bigbluebutton/api/join?clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&fullName=Guilherme+Gazzo&meetingID=random-6822671&password=mp&redirect=true&checksum=5986a19a7b57fce246080aa01720061bbdd85c09' }}
+						style={{
+							width, height, top: 0, left: 0, margin: 5
+						}}
 					/>
 				</Modal>
 			]
