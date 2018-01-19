@@ -152,9 +152,10 @@ export default class extends React.PureComponent {
 					isVisible={this.state.isModalVisible}
 					supportedOrientations={['portrait', 'landscape']}
 					style={{ alignItems: 'center', position: 'relative' }}
-					onBackdropPress={() => this.hideModal()}
+					onBackdropPress={() => this.toggleModal()}
 				>
 					<WebView
+						mediaPlaybackRequiresUserAction
 						source={{ uri: 'https://live11-kms.dev.mconf.com/bigbluebutton/api/join?clientURL=https%3A%2F%2Flive11-kms.dev.mconf.com%2Fhtml5client%2Fjoin&fullName=Guilherme+Gazzo&meetingID=random-6822671&password=mp&redirect=true&checksum=5986a19a7b57fce246080aa01720061bbdd85c09' }}
 						style={{
 							width, height, top: 0, left: 0, margin: 5
