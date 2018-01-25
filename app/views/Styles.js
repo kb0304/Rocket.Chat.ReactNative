@@ -165,5 +165,12 @@ export default StyleSheet.create({
 	},
 	validatingText: {
 		color: '#aaa'
+	},
+	oauthButton: {
+		width: 50,
+		height: 50,
+		alignItems: 'center',
+		justifyContent: 'center',
+		margin: 4
 	}
 });

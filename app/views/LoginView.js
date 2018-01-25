@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { Keyboard, Text, TextInput, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as loginActions from '../actions/login';
 import KeyboardView from '../presentation/KeyboardView';
 
@@ -132,6 +134,30 @@ class LoginView extends React.Component {
 
 								<TouchableOpacity style={styles.buttonContainer_inverted} onPress={this.forgotPassword}>
 									<Text style={styles.button_inverted} accessibilityTraits='button'>FORGOT MY PASSWORD</Text>
+								</TouchableOpacity>
+							</View>
+
+							<View style={[styles.loginSecondaryButtons, { justifyContent: 'center' }]}>
+								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#3b5998' }]}>
+									<Icon name='facebook' size={20} color='#ffffff' />
+								</TouchableOpacity>
+								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#4c4c4c' }]}>
+									<Icon name='github' size={20} color='#ffffff' />
+								</TouchableOpacity>
+								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#373d47' }]}>
+									<Icon name='gitlab' size={20} color='#ffffff' />
+								</TouchableOpacity>
+								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#dd4b39' }]}>
+									<Icon name='google' size={20} color='#ffffff' />
+								</TouchableOpacity>
+								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#1b86bc' }]}>
+									<Icon name='linkedin' size={20} color='#ffffff' />
+								</TouchableOpacity>
+								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#de4f4f' }]}>
+									<MaterialCommunityIcons name='meteor' size={25} color='#ffffff' />
+								</TouchableOpacity>
+								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#02acec' }]}>
+									<Icon name='twitter' size={20} color='#ffffff' />
 								</TouchableOpacity>
 							</View>
 
