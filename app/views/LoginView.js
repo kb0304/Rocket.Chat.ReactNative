@@ -14,19 +14,33 @@ import { showToast } from '../utils/info';
 
 @connect(state => ({
 	server: state.server.server,
+	login: state.login,
 	Accounts_EmailOrUsernamePlaceholder: state.settings.Accounts_EmailOrUsernamePlaceholder,
 	Accounts_PasswordPlaceholder: state.settings.Accounts_PasswordPlaceholder,
-	login: state.login
+	Accounts_OAuth_Facebook: state.settings.Accounts_OAuth_Facebook,
+	Accounts_OAuth_Github: state.settings.Accounts_OAuth_Github,
+	Accounts_OAuth_Gitlab: state.settings.Accounts_OAuth_Gitlab,
+	Accounts_OAuth_Google: state.settings.Accounts_OAuth_Google,
+	Accounts_OAuth_Linkedin: state.settings.Accounts_OAuth_Linkedin,
+	Accounts_OAuth_Meteor: state.settings.Accounts_OAuth_Meteor,
+	Accounts_OAuth_Twitter: state.settings.Accounts_OAuth_Twitter
 }), dispatch => ({
 	loginSubmit: params => dispatch(loginSubmit(params))
 }))
 export default class LoginView extends React.Component {
 	static propTypes = {
 		loginSubmit: PropTypes.func.isRequired,
+		navigation: PropTypes.object.isRequired,
+		login: PropTypes.object,
 		Accounts_EmailOrUsernamePlaceholder: PropTypes.string,
 		Accounts_PasswordPlaceholder: PropTypes.string,
-		login: PropTypes.object,
-		navigation: PropTypes.object.isRequired
+		Accounts_OAuth_Facebook: PropTypes.bool,
+		Accounts_OAuth_Github: PropTypes.bool,
+		Accounts_OAuth_Gitlab: PropTypes.bool,
+		Accounts_OAuth_Google: PropTypes.bool,
+		Accounts_OAuth_Linkedin: PropTypes.bool,
+		Accounts_OAuth_Meteor: PropTypes.bool,
+		Accounts_OAuth_Twitter: PropTypes.bool
 	}
 
 	static navigationOptions = () => ({
@@ -89,6 +103,10 @@ export default class LoginView extends React.Component {
 		return null;
 	}
 
+	onPressOAuth() {
+		alert('oauth!')
+	}
+
 	render() {
 		return (
 			<KeyboardView
@@ -144,28 +162,63 @@ export default class LoginView extends React.Component {
 								</TouchableOpacity>
 							</View>
 
-							<View style={[styles.loginSecondaryButtons, { justifyContent: 'center' }]}>
-								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#3b5998' }]}>
-									<Icon name='facebook' size={20} color='#ffffff' />
-								</TouchableOpacity>
-								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#4c4c4c' }]}>
-									<Icon name='github' size={20} color='#ffffff' />
-								</TouchableOpacity>
-								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#373d47' }]}>
-									<Icon name='gitlab' size={20} color='#ffffff' />
-								</TouchableOpacity>
-								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#dd4b39' }]}>
-									<Icon name='google' size={20} color='#ffffff' />
-								</TouchableOpacity>
-								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#1b86bc' }]}>
-									<Icon name='linkedin' size={20} color='#ffffff' />
-								</TouchableOpacity>
-								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#de4f4f' }]}>
-									<MaterialCommunityIcons name='meteor' size={25} color='#ffffff' />
-								</TouchableOpacity>
-								<TouchableOpacity style={[styles.oauthButton, { backgroundColor: '#02acec' }]}>
-									<Icon name='twitter' size={20} color='#ffffff' />
-								</TouchableOpacity>
+							<View style={styles.loginOAuthButtons}>
+								{this.props.Accounts_OAuth_Facebook &&
+									<TouchableOpacity
+										style={[styles.oauthButton, styles.facebookButton]}
+										onPress={this.onPressOAuth}
+									>
+										<Icon name='facebook' size={20} color='#ffffff' />
+									</TouchableOpacity>
+								}
+								{this.props.Accounts_OAuth_Github &&
+									<TouchableOpacity
+										style={[styles.oauthButton, styles.githubButton]}
+										onPress={this.onPressOAuth}
+									>
+										<Icon name='github' size={20} color='#ffffff' />
+									</TouchableOpacity>
+								}
+								{this.props.Accounts_OAuth_Gitlab &&
+									<TouchableOpacity
+										style={[styles.oauthButton, styles.gitlabButton]}
+										onPress={this.onPressOAuth}
+									>
+										<Icon name='gitlab' size={20} color='#ffffff' />
+									</TouchableOpacity>
+								}
+								{this.props.Accounts_OAuth_Google &&
+									<TouchableOpacity
+										style={[styles.oauthButton, styles.googleButton]}
+										onPress={this.onPressOAuth}
+									>
+										<Icon name='google' size={20} color='#ffffff' />
+									</TouchableOpacity>
+								}
+								{this.props.Accounts_OAuth_Linkedin &&
+									<TouchableOpacity
+										style={[styles.oauthButton, styles.linkedinButton]}
+										onPress={this.onPressOAuth}
+									>
+										<Icon name='linkedin' size={20} color='#ffffff' />
+									</TouchableOpacity>
+								}
+								{this.props.Accounts_OAuth_Meteor &&
+									<TouchableOpacity
+										style={[styles.oauthButton, styles.meteorButton]}
+										onPress={this.onPressOAuth}
+									>
+										<MaterialCommunityIcons name='meteor' size={25} color='#ffffff' />
+									</TouchableOpacity>
+								}
+								{this.props.Accounts_OAuth_Twitter &&
+									<TouchableOpacity
+										style={[styles.oauthButton, styles.twitterButton]}
+										onPress={this.onPressOAuth}
+									>
+										<Icon name='twitter' size={20} color='#ffffff' />
+									</TouchableOpacity>
+								}
 							</View>
 
 							<TouchableOpacity>

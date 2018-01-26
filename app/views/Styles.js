@@ -157,6 +157,11 @@ export default StyleSheet.create({
 		flexWrap: 'wrap',
 		justifyContent: 'space-around'
 	},
+	loginOAuthButtons: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'center'
+	},
 	validText: {
 		color: 'green'
 	},
@@ -172,5 +177,26 @@ export default StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 4
+	},
+	facebookButton: {
+		backgroundColor: '#3b5998'
+	},
+	githubButton: {
+		backgroundColor: '#4c4c4c'
+	},
+	gitlabButton: {
+		backgroundColor: '#373d47'
+	},
+	googleButton: {
+		backgroundColor: '#dd4b39'
+	},
+	linkedinButton: {
+		backgroundColor: '#1b86bc'
+	},
+	meteorButton: {
+		backgroundColor: '#de4f4f'
+	},
+	twitterButton: {
+		backgroundColor: '#02acec'
 	}
 });
