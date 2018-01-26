@@ -3,17 +3,24 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import PropTypes from 'prop-types';
 import { Keyboard, Text, TextInput, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as loginActions from '../actions/login';
+import { loginSubmit } from '../actions/login';
 import KeyboardView from '../presentation/KeyboardView';
 
 import styles from './Styles';
 import scrollPersistTaps from '../utils/scrollPersistTaps';
 import { showToast } from '../utils/info';
 
-class LoginView extends React.Component {
+@connect(state => ({
+	server: state.server.server,
+	Accounts_EmailOrUsernamePlaceholder: state.settings.Accounts_EmailOrUsernamePlaceholder,
+	Accounts_PasswordPlaceholder: state.settings.Accounts_PasswordPlaceholder,
+	login: state.login
+}), dispatch => ({
+	loginSubmit: params => dispatch(loginSubmit(params))
+}))
+export default class LoginView extends React.Component {
 	static propTypes = {
 		loginSubmit: PropTypes.func.isRequired,
 		Accounts_EmailOrUsernamePlaceholder: PropTypes.string,
@@ -178,18 +185,3 @@ class LoginView extends React.Component {
 		);
 	}
 }
-
-function mapStateToProps(state) {
-	return {
-		server: state.server.server,
-		Accounts_EmailOrUsernamePlaceholder: state.settings.Accounts_EmailOrUsernamePlaceholder,
-		Accounts_PasswordPlaceholder: state.settings.Accounts_PasswordPlaceholder,
-		login: state.login
-	};
-}
-
-function mapDispatchToProps(dispatch) {
-	return bindActionCreators(loginActions, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginView);
