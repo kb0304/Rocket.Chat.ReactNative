@@ -20,6 +20,17 @@
 	<string>1.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>chat.rocket.reactnative</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>chat.rocket.reactnative</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>100</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -40,7 +51,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Upload images from camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Upload images from library</string>
 	<key>UIAppFonts</key>

@@ -144,6 +144,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-app-auth')
     compile project(':react-native-splash-screen')
     compile project(':react-native-video')
     compile project(':react-native-push-notification')

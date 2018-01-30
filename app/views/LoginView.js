@@ -5,6 +5,8 @@ import { Keyboard, Text, TextInput, View, ScrollView, TouchableOpacity, SafeArea
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AppAuth from 'react-native-app-auth';
+
 import { loginSubmit } from '../actions/login';
 import KeyboardView from '../presentation/KeyboardView';
 
@@ -79,6 +81,25 @@ export default class LoginView extends React.Component {
 		this.props.navigation.navigate('PrivacyPolicy');
 	}
 
+	loginGoogle = async() => {
+		const scopes = ['openid', 'profile'];
+		const appAuth = new AppAuth({
+			issuer: 'https://accounts.google.com',
+			clientId: '981098912445-m4s30buikqlt9qa6r5mpf3ilgqkf36d5.apps.googleusercontent.com',
+			redirectUrl: 'chat.rocket.reactnative:/oauth2redirect/google'
+		});
+		try {
+			const result = await appAuth.authorize(scopes);
+			console.warn(result)
+		} catch (error) {
+			alert(error);
+		}
+	}
+
+	loginOAuth = () => {
+		alert('asd')
+	}
+
 	forgotPassword = () => {
 		this.props.navigation.navigate('ForgotPassword');
 	}
@@ -101,10 +122,6 @@ export default class LoginView extends React.Component {
 			);
 		}
 		return null;
-	}
-
-	onPressOAuth() {
-		alert('oauth!')
 	}
 
 	render() {
@@ -166,7 +183,7 @@ export default class LoginView extends React.Component {
 								{this.props.Accounts_OAuth_Facebook &&
 									<TouchableOpacity
 										style={[styles.oauthButton, styles.facebookButton]}
-										onPress={this.onPressOAuth}
+										onPress={this.loginOAuth}
 									>
 										<Icon name='facebook' size={20} color='#ffffff' />
 									</TouchableOpacity>
@@ -174,7 +191,7 @@ export default class LoginView extends React.Component {
 								{this.props.Accounts_OAuth_Github &&
 									<TouchableOpacity
 										style={[styles.oauthButton, styles.githubButton]}
-										onPress={this.onPressOAuth}
+										onPress={this.loginOAuth}
 									>
 										<Icon name='github' size={20} color='#ffffff' />
 									</TouchableOpacity>
@@ -182,7 +199,7 @@ export default class LoginView extends React.Component {
 								{this.props.Accounts_OAuth_Gitlab &&
 									<TouchableOpacity
 										style={[styles.oauthButton, styles.gitlabButton]}
-										onPress={this.onPressOAuth}
+										onPress={this.loginOAuth}
 									>
 										<Icon name='gitlab' size={20} color='#ffffff' />
 									</TouchableOpacity>
@@ -190,7 +207,7 @@ export default class LoginView extends React.Component {
 								{this.props.Accounts_OAuth_Google &&
 									<TouchableOpacity
 										style={[styles.oauthButton, styles.googleButton]}
-										onPress={this.onPressOAuth}
+										onPress={this.loginGoogle}
 									>
 										<Icon name='google' size={20} color='#ffffff' />
 									</TouchableOpacity>
@@ -198,7 +215,7 @@ export default class LoginView extends React.Component {
 								{this.props.Accounts_OAuth_Linkedin &&
 									<TouchableOpacity
 										style={[styles.oauthButton, styles.linkedinButton]}
-										onPress={this.onPressOAuth}
+										onPress={this.loginOAuth}
 									>
 										<Icon name='linkedin' size={20} color='#ffffff' />
 									</TouchableOpacity>
@@ -206,7 +223,7 @@ export default class LoginView extends React.Component {
 								{this.props.Accounts_OAuth_Meteor &&
 									<TouchableOpacity
 										style={[styles.oauthButton, styles.meteorButton]}
-										onPress={this.onPressOAuth}
+										onPress={this.loginOAuth}
 									>
 										<MaterialCommunityIcons name='meteor' size={25} color='#ffffff' />
 									</TouchableOpacity>
@@ -214,7 +231,7 @@ export default class LoginView extends React.Component {
 								{this.props.Accounts_OAuth_Twitter &&
 									<TouchableOpacity
 										style={[styles.oauthButton, styles.twitterButton]}
-										onPress={this.onPressOAuth}
+										onPress={this.loginOAuth}
 									>
 										<Icon name='twitter' size={20} color='#ffffff' />
 									</TouchableOpacity>
