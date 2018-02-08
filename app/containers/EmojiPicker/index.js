@@ -8,15 +8,15 @@ import TabBar from './TabBar';
 import EmojiCategory from './EmojiCategory';
 import styles from './styles';
 import categories from './categories';
+import scrollPersistTaps from '../../utils/scrollPersistTaps';
 import database from '../../lib/realm';
 import { emojisByCategory } from '../../emojis';
 
 const scrollProps = {
-	keyboardShouldPersistTaps: 'always',
-	keyboardDismissMode: 'none'
+	keyboardShouldPersistTaps: 'always'
 };
 
-export default class EmojiPicker extends Component {
+export default class extends Component {
 	static propTypes = {
 		onEmojiSelected: PropTypes.func,
 		tabEmojiStyle: PropTypes.object,
@@ -45,10 +45,9 @@ export default class EmojiPicker extends Component {
 		this.customEmojis.addListener(this.updateCustomEmojis);
 		this.updateFrequentlyUsed();
 		this.updateCustomEmojis();
+		setTimeout(() => this.setState({ show: true }), 100);
 	}
-	componentDidMount() {
-		requestAnimationFrame(() => this.setState({ show: true }));
-	}
+
 	componentWillUnmount() {
 		this.frequentlyUsed.removeAllListeners();
 		this.customEmojis.removeAllListeners();
@@ -123,14 +122,13 @@ export default class EmojiPicker extends Component {
 			<ScrollableTabView
 				renderTabBar={() => <TabBar tabEmojiStyle={this.props.tabEmojiStyle} />}
 				contentProps={scrollProps}
-				// prerenderingSiblingsNumber={1}
 			>
 				{
 					categories.tabs.map((tab, i) => (
 						<ScrollView
 							key={tab.category}
 							tabLabel={tab.tabLabel}
-							{...scrollProps}
+							{...scrollPersistTaps}
 						>
 							{this.renderCategory(tab.category, i)}
 						</ScrollView>

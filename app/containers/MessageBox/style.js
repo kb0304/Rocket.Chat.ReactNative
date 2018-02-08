@@ -21,14 +21,13 @@ export default StyleSheet.create({
 		flexGrow: 0
 	},
 	textBoxInput: {
+		paddingHorizontal: 5,
 		textAlignVertical: 'center',
 		maxHeight: 120,
 		flexGrow: 1,
 		width: 1,
 		paddingTop: 15,
-		paddingBottom: 15,
-		paddingLeft: 0,
-		paddingRight: 0
+		paddingBottom: 15
 	},
 	editing: {
 		backgroundColor: '#fff5df'
@@ -38,7 +37,6 @@ export default StyleSheet.create({
 		fontSize: 20,
 		textAlign: 'center',
 		padding: 15,
-		paddingHorizontal: 21,
 		flex: 0
 	},
 	actionRow: {
@@ -100,10 +98,5 @@ export default StyleSheet.create({
 		fontWeight: 'bold',
 		textAlign: 'center',
 		width: 46
-	},
-	emojiKeyboardContainer: {
-		flex: 1,
-		borderTopColor: '#ECECEC',
-		borderTopWidth: 1
 	}
 });

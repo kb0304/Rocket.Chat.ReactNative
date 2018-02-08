@@ -14,7 +14,7 @@ const styles = {
 	}
 };
 
-export default class Photo extends React.PureComponent {
+export default class extends React.PureComponent {
 	static propTypes = {
 		navigation: PropTypes.object.isRequired
 	}

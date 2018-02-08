@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, TouchableOpacity, Platform } from 'react-native';
+import { Text, View, TouchableOpacity, Platform } from 'react-native';
 import { emojify } from 'react-emojione';
 import { responsive } from 'react-native-responsive-ui';
-import { OptimizedFlatList } from 'react-native-optimized-flatlist';
 import styles from './styles';
 import CustomEmoji from './CustomEmoji';
-import scrollPersistTaps from '../../utils/scrollPersistTaps';
+
 
 const emojisPerRow = Platform.OS === 'ios' ? 8 : 9;
 
@@ -21,6 +20,8 @@ const renderEmoji = (emoji, size) => {
 	);
 };
 
+
+const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
 
 @responsive
 export default class EmojiCategory extends React.Component {
@@ -39,7 +40,23 @@ export default class EmojiCategory extends React.Component {
 		this.emojis = [];
 	}
 	componentWillMount() {
-		this.emojis = this.props.emojis;
+		this.emojis = this.props.emojis.slice(0, emojisPerRow * 3).map(item => this.renderItem(item, this.size));
+	}
+	async componentDidMount() {
+		const array = this.props.emojis;
+		const temparray = [];
+		let i;
+		let j;
+		const chunk = emojisPerRow * 3;
+		for (i = chunk, j = array.length; i < j; i += chunk) {
+			temparray.push(array.slice(i, i + chunk));
+		}
+		temparray.forEach(async(items) => {
+			await nextFrame();
+			this.emojis = this.emojis.concat(items.map(item => this.renderItem(item, this.size)));
+			this.forceUpdate();
+			await nextFrame();
+		});
 	}
 
 	shouldComponentUpdate() {
@@ -58,17 +75,6 @@ export default class EmojiCategory extends React.Component {
 	}
 
 	render() {
-		return (
-			<OptimizedFlatList
-				keyExtractor={item => (item.isCustom && item.content) || item}
-				data={this.props.emojis}
-				renderItem={({ item }) => this.renderItem(item, this.size)}
-				numColumns={emojisPerRow}
-				initialNumToRender={45}
-				getItemLayout={(data, index) => ({ length: this.size, offset: this.size * index, index })}
-				removeClippedSubviews
-				{...scrollPersistTaps}
-			/>
-		);
+		return <View style={styles.categoryInner}>{this.emojis}</View>;
 	}
 }

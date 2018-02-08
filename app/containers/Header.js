@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default class Header extends React.PureComponent {
+export default class extends React.PureComponent {
 	static propTypes = {
 		subview: PropTypes.object.isRequired
 	}

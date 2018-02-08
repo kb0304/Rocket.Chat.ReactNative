@@ -1,21 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, TextInput, SafeAreaView, FlatList, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, SafeAreaView, FlatList, Text, TouchableOpacity, Keyboard, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
 import { emojify } from 'react-emojione';
-import { KeyboardAccessoryView } from 'react-native-keyboard-input';
-import { userTyping, layoutAnimation } from '../../actions/room';
+import { userTyping } from '../../actions/room';
 import RocketChat from '../../lib/rocketchat';
 import { editRequest, editCancel, clearInput } from '../../actions/messages';
-import styles from './styles';
+import styles from './style';
 import MyIcon from '../icons';
 import database from '../../lib/realm';
 import Avatar from '../Avatar';
 import CustomEmoji from '../EmojiPicker/CustomEmoji';
+import AnimatedContainer from './AnimatedContainer';
+import EmojiPicker from '../EmojiPicker';
+import scrollPersistTaps from '../../utils/scrollPersistTaps';
 import { emojis } from '../../emojis';
-import './EmojiKeyboard';
 
 const MENTIONS_TRACKING_TYPE_USERS = '@';
 const MENTIONS_TRACKING_TYPE_EMOJIS = ':';
@@ -28,13 +29,13 @@ const onlyUnique = function onlyUnique(value, index, self) {
 	room: state.room,
 	message: state.messages.message,
 	editing: state.messages.editing,
-	baseUrl: state.settings.Site_Url || state.server ? state.server.server : ''
+	baseUrl: state.settings.Site_Url || state.server ? state.server.server : '',
+	isKeyboardOpen: state.keyboard.isOpen
 }), dispatch => ({
 	editCancel: () => dispatch(editCancel()),
 	editRequest: message => dispatch(editRequest(message)),
 	typing: status => dispatch(userTyping(status)),
-	clearInput: () => dispatch(clearInput()),
-	layoutAnimation: () => dispatch(layoutAnimation())
+	clearInput: () => dispatch(clearInput())
 }))
 export default class MessageBox extends React.PureComponent {
 	static propTypes = {
@@ -47,23 +48,23 @@ export default class MessageBox extends React.PureComponent {
 		editing: PropTypes.bool,
 		typing: PropTypes.func,
 		clearInput: PropTypes.func,
-		layoutAnimation: PropTypes.func
+		isKeyboardOpen: PropTypes.bool
 	}
 
 	constructor(props) {
 		super(props);
 		this.state = {
+			messageboxHeight: 0,
 			text: '',
 			mentions: [],
 			showMentionsContainer: false,
-			showEmojiKeyboard: false,
+			showEmojiContainer: false,
 			trackingType: ''
 		};
 		this.users = [];
 		this.rooms = [];
 		this.emojis = [];
 		this.customEmojis = [];
-		this._onEmojiSelected = this._onEmojiSelected.bind(this);
 	}
 	componentWillReceiveProps(nextProps) {
 		if (this.props.message !== nextProps.message && nextProps.message.msg) {
@@ -71,6 +72,8 @@ export default class MessageBox extends React.PureComponent {
 			this.component.focus();
 		} else if (!nextProps.message) {
 			this.setState({ text: '' });
+		} else if (this.props.isKeyboardOpen !== nextProps.isKeyboardOpen && nextProps.isKeyboardOpen) {
+			this.closeEmoji();
 		}
 	}
 
@@ -97,10 +100,6 @@ export default class MessageBox extends React.PureComponent {
 		});
 	}
 
-	onKeyboardResigned() {
-		this.closeEmoji();
-	}
-
 	get leftButtons() {
 		const { editing } = this.props;
 		if (editing) {
@@ -112,7 +111,7 @@ export default class MessageBox extends React.PureComponent {
 				onPress={() => this.editCancel()}
 			/>);
 		}
-		return !this.state.showEmojiKeyboard ? (<Icon
+		return !this.state.showEmojiContainer ? (<Icon
 			style={styles.actionButtons}
 			onPress={() => this.openEmoji()}
 			accessibilityLabel='Open emoji selector'
@@ -185,11 +184,13 @@ export default class MessageBox extends React.PureComponent {
 	}
 	async openEmoji() {
 		await this.setState({
-			showEmojiKeyboard: true
+			showEmojiContainer: true,
+			showMentionsContainer: false
 		});
+		Keyboard.dismiss();
 	}
 	closeEmoji() {
-		this.setState({ showEmojiKeyboard: false });
+		this.setState({ showEmojiContainer: false });
 	}
 	submit(message) {
 		this.setState({ text: '' });
@@ -323,12 +324,9 @@ export default class MessageBox extends React.PureComponent {
 	}
 
 	identifyMentionKeyword(keyword, type) {
-		if (!this.state.showMentionsContainer) {
-			this.props.layoutAnimation();
-		}
 		this.setState({
 			showMentionsContainer: true,
-			showEmojiKeyboard: false,
+			showEmojiContainer: false,
 			trackingType: type
 		});
 		this.updateMentions(keyword, type);
@@ -362,9 +360,8 @@ export default class MessageBox extends React.PureComponent {
 		this.component.focus();
 		requestAnimationFrame(() => this.stopTrackingMention());
 	}
-	_onEmojiSelected(keyboardId, params) {
+	_onEmojiSelected(emoji) {
 		const { text } = this.state;
-		const { emoji } = params;
 		let newText = '';
 
 		// if messagebox has an active cursor
@@ -393,7 +390,7 @@ export default class MessageBox extends React.PureComponent {
 			return (
 				<CustomEmoji
 					key='mention-item-avatar'
-					style={styles.mentionItemCustomEmoji}
+					style={[styles.mentionItemCustomEmoji]}
 					emoji={item}
 					baseUrl={this.props.baseUrl}
 				/>
@@ -402,7 +399,7 @@ export default class MessageBox extends React.PureComponent {
 		return (
 			<Text
 				key='mention-item-avatar'
-				style={styles.mentionItemEmoji}
+				style={[StyleSheet.flatten(styles.mentionItemEmoji)]}
 			>
 				{emojify(`:${ item }:`, { output: 'unicode' })}
 			</Text>
@@ -436,24 +433,34 @@ export default class MessageBox extends React.PureComponent {
 			</TouchableOpacity>
 		);
 	}
-	renderMentions = () => (
-		<FlatList
-			key='messagebox-container'
-			style={styles.mentionList}
-			data={this.state.mentions}
-			renderItem={({ item }) => this.renderMentionItem(item)}
-			keyExtractor={item => item._id || item}
-			keyboardShouldPersistTaps='always'
-		/>
-	);
-
-	renderContent() {
+	renderEmoji() {
+		const emojiContainer = (
+			<View style={styles.emojiContainer}>
+				<EmojiPicker onEmojiSelected={emoji => this._onEmojiSelected(emoji)} />
+			</View>
+		);
+		const { showEmojiContainer, messageboxHeight } = this.state;
+		return <AnimatedContainer visible={showEmojiContainer} subview={emojiContainer} messageboxHeight={messageboxHeight} />;
+	}
+	renderMentions() {
+		const list = (
+			<FlatList
+				style={styles.mentionList}
+				data={this.state.mentions}
+				renderItem={({ item }) => this.renderMentionItem(item)}
+				keyExtractor={item => item._id || item}
+				{...scrollPersistTaps}
+			/>
+		);
+		const { showMentionsContainer, messageboxHeight } = this.state;
+		return <AnimatedContainer visible={showMentionsContainer} subview={list} messageboxHeight={messageboxHeight} />;
+	}
+	render() {
 		return (
-			[
-				this.renderMentions(),
+			<View>
 				<SafeAreaView
-					key='messagebox'
 					style={[styles.textBox, (this.props.editing ? styles.editing : null)]}
+					onLayout={event => this.setState({ messageboxHeight: event.nativeEvent.layout.height })}
 				>
 					<View style={styles.textArea}>
 						{this.leftButtons}
@@ -473,22 +480,9 @@ export default class MessageBox extends React.PureComponent {
 						{this.rightButtons}
 					</View>
 				</SafeAreaView>
-			]
-		);
-	}
-
-	render() {
-		return (
-			<KeyboardAccessoryView
-				renderContent={() => this.renderContent()}
-				kbInputRef={this.component}
-				kbComponent={this.state.showEmojiKeyboard ? 'EmojiKeyboard' : null}
-				onKeyboardResigned={() => this.onKeyboardResigned()}
-				onItemSelected={this._onEmojiSelected}
-				trackInteractive
-				revealKeyboardInteractive
-				requiresSameParentToManageScrollView
-			/>
+				{this.renderMentions()}
+				{this.renderEmoji()}
+			</View>
 		);
 	}
 }

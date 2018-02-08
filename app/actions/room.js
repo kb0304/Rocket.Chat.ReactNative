@@ -55,9 +55,3 @@ export function setLastOpen(date = new Date()) {
 		date
 	};
 }
-
-export function layoutAnimation() {
-	return {
-		type: types.ROOM.LAYOUT_ANIMATION
-	};
-}

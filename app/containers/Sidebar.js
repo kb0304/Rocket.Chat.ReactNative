@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView, Text, View, StyleSheet, FlatList, TouchableHighlight } from 'react-native';
+import { DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import database from '../lib/realm';
@@ -100,6 +101,10 @@ export default class Sidebar extends Component {
 		return (
 			<ScrollView style={styles.scrollView}>
 				<View style={{ paddingBottom: 20 }}>
+					<DrawerItems
+						{...this.props}
+						onItemPress={this.onItemPress}
+					/>
 					<FlatList
 						data={this.state.servers}
 						renderItem={this.renderItem}
